@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple NodeJS Express WebSocket</title>
+</head>
+
+<body>
+    <form id="input-form">
+        <label for="message">Enter Message:</label>
+        <input type="text" id="message" name="message"><br><br>
+        <input type="submit" value="Send">
+    </form>
+    <div id="messages"></div>
+    <script>
+        // Connect the client (browser that gets this html file) WebSocket
+        const webSocket = new WebSocket('ws://10.13.9.189:443/');
+
+        // Define the function that will be executed when the server sends a message to the client.
+        webSocket.onmessage = (event) => {
+            console.log(event)
+            document.getElementById('messages').innerHTML +=
+                'Message from server: ' + event.data + "<br>";
+        };
+
+        // Add a listener to the "open" event of websockets. So, it logs something on connect.
+        webSocket.addEventListener("open", () => {
+            console.log("We are connected");
+        });
+    
+        // Define the function that will send a message to the server.
+        function sendMessage(event) {
+            var inputMessage = document.getElementById('message')
+            webSocket.send(inputMessage.value)
+            inputMessage.value = ""
+            event.preventDefault();
+        }
+
+        document.getElementById('input-form').addEventListener('submit', sendMessage);
+    </script>
+</body>
+
+</html>
+<html>
